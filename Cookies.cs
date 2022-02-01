@@ -129,6 +129,28 @@ namespace HRngBackend
             if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);
             driver.Manage().Cookies.DeleteAllCookies();
         }
+
+        /*
+         * public static Dictionary<string, string> Se_SaveCookies(IWebDriver driver, [string url])
+         *  Get all cookies associated with a domain in a Selenium browser
+         *  session.
+         *  Input : driver: The driver instance for the Selenium browser
+         *                  session.
+         *          url   : The URL to retrieve cookies for (optional).
+         *                  If specified, this function will load the page
+         *                  before getting its cookies.
+         *  Output: A string => string dictionary containing the cookies.
+         */
+        public static Dictionary<string, string> Se_SaveCookies(IWebDriver driver, string url = "")
+        {
+            if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);
+            Dictionary<string, string> cookies = new Dictionary<string, string>();
+            foreach (var cookie in driver.Manage().Cookies.AllCookies)
+            {
+                if (!cookies.ContainsKey(cookie.Name)) cookies.Add(cookie.Name, cookie.Value);
+            }
+            return cookies;
+        }
     }
 }
 #nullable disable
