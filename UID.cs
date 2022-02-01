@@ -298,6 +298,7 @@ namespace HRngBackend
             while (svc_tasks.Count > 0)
             {
                 Task<long> finished_task = await Task.WhenAny(svc_tasks); // Wait until any task finishes
+                svc_tasks.Remove(finished_task); // Remove from thread pool
                 if (finished_task.Result > 0)
                 {
                     // Task finishes successfully, cancel all the other tasks and return
@@ -306,12 +307,6 @@ namespace HRngBackend
                     uid = finished_task.Result;
                     goto retrieved;
                 }
-            }
-            foreach (var service in services)
-            {
-                // Console.WriteLine(service);
-                uid = await LookupUID(service.url, service.data, service.xpath);
-                if (uid > 0) goto retrieved;
             }
 
             /* Attempt retrieval by scraping Facebook (if possible) */
