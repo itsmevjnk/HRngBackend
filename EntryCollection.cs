@@ -35,7 +35,7 @@ namespace HRngBackend
         public int UIDColumn = -1;
 
         /// <summary>
-        ///  Populate the EntryCollection object with information from a spreadsheet.
+        ///  Populate the <c>EntryCollection</c> object with information from a spreadsheet.
         /// </summary>
         /// <param name="sheet">The input spreadsheet.</param>
         /// <param name="start_row">The starting row number (starting from 0) of the input spreadsheet (i.e. the row where headers are put in) (optional). Defaults to 0.</param>
@@ -45,6 +45,7 @@ namespace HRngBackend
         ///  If specified, this will override <paramref name="uid_name"/> unless the specified column number is out of the spreadsheet's range.
         /// </param>
         /// <param name="uid_delim">The delimiter character(s) for separating UIDs (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <exception cref="FormatException">Thrown if the UID column cannot be found.</exception>
         public void FromSpreadsheet(Spreadsheet sheet, int start_row = 0, string uid_name = "UID", int uid_col = -1, string uid_delim = null)
         {
             uid_delim = uid_delim ?? Environment.NewLine; // Set the UID delimiter
@@ -68,7 +69,7 @@ namespace HRngBackend
                     }
                 }
             }
-            if (UIDColumn < 0) throw new Exception("Cannot find UID column");
+            if (UIDColumn < 0) throw new FormatException("Cannot find UID column");
 
             /* Read entries */
             for (int i = start_row + 1; i < sheet.Rows; i++)
@@ -147,9 +148,10 @@ namespace HRngBackend
         ///  Remove a column from the EntryCollection.
         /// </summary>
         /// <param name="col">The column number of the column to be removed.</param>
+        /// <exception cref="ArgumentException">Thrown if the column specified in <paramref name="col"/> does not exist.</exception>
         public void RemoveColumn(int col)
         {
-            if (!Headers.Keys.Contains(col)) throw new Exception($"Attempting to remove nonexistant column {col}");
+            if (!Headers.Keys.Contains(col)) throw new ArgumentException($"Attempting to remove nonexistant column {col}");
             Headers.Remove(col);
             foreach (var entry in Entries)
             {
@@ -161,18 +163,19 @@ namespace HRngBackend
         /// <summary>
         ///  Count the number of reactions associated with each entry.
         /// </summary>
-        /// <param name="reactions">A list of FBReact objects storing reactions to be counted.</param>
+        /// <param name="reactions">A list of <c>FBReact</c> objects storing reactions to be counted.</param>
         /// <param name="col">The column number to store reaction count. Must be set to store the reaction count.</param>
         /// <param name="col_log">The column number to store information on which reactions were used with which UID. Must be set to store this data.</param>
         /// <param name="log_sep">The string to separate the UID from the reaction type in a line (optional). Defaults to <c>: </c>.</param>
         /// <param name="log_delim">The delimiter to use in the log column if there are multiple UIDs reacting to the post (optional). Defaults to <c>Environment.NewLine</c>.</param>
         /// <param name="include">Array of reaction types to include (optional). If not specified, all types will be included.</param>
         /// <param name="exclude">Array of reaction types to exclude (optional). If not specified, no types will be excluded.</param>
+        /// <exception cref="ArgumentException">Thrown if a specified column number does not exist.</exception>
         public void CountReactions(List<FBReact> reactions, int col = -1, int col_log = -1, string log_sep = ": ", string log_delim = null, ReactionEnum[] include = null, ReactionEnum[] exclude = null)
         {
             if (col == -1 && col_log == -1) return; // Nothing to do
-            if (col != -1 && !Headers.Keys.Contains(col)) throw new Exception($"Invalid column number {col}");
-            if (col_log != -1 && !Headers.Keys.Contains(col_log)) throw new Exception($"Invalid column number {col_log}");
+            if (col != -1 && !Headers.Keys.Contains(col)) throw new ArgumentException($"Invalid column number {col}");
+            if (col_log != -1 && !Headers.Keys.Contains(col_log)) throw new ArgumentException($"Invalid column number {col_log}");
             log_delim = log_delim ?? Environment.NewLine;
             foreach (var entry in Entries)
             {
@@ -208,11 +211,12 @@ namespace HRngBackend
         /// <param name="col">The column number to store share count. Must be set to store the share count.</param>
         /// <param name="col_log">The column number to store information on which account shared the post. Must be set to store this data.</param>
         /// <param name="log_delim">The delimiter to use in the log column if there are multiple UIDs sharing the post (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <exception cref="ArgumentException">Thrown if a specified column number does not exist.</exception>
         public void CountShares(List<long> shares, int col = -1, int col_log = -1, string log_delim = null)
         {
             if (col == -1 && col_log == -1) return; // Nothing to do
-            if (col != -1 && !Headers.Keys.Contains(col)) throw new Exception($"Invalid column number {col}");
-            if (col_log != -1 && !Headers.Keys.Contains(col_log)) throw new Exception($"Invalid column number {col_log}");
+            if (col != -1 && !Headers.Keys.Contains(col)) throw new ArgumentException($"Invalid column number {col}");
+            if (col_log != -1 && !Headers.Keys.Contains(col_log)) throw new ArgumentException($"Invalid column number {col_log}");
             log_delim = log_delim ?? Environment.NewLine;
             foreach (var entry in Entries)
             {
@@ -239,7 +243,7 @@ namespace HRngBackend
         /// <summary>
         ///  Count the number of comments made by each entry.
         /// </summary>
-        /// <param name="comments">A list of FBComment objects for each comment to be checked.</param>
+        /// <param name="comments">A list of <c>FBComment</c> objects for each comment to be checked.</param>
         /// <param name="col">The column number to store comments count. Must be set to store this data.</param>
         /// <param name="col_cmts">The column number to store comment text. Must be set to store this data.</param>
         /// <param name="cmts_sep">The separator character(s) to separate the UID from the comment text (optional). Defaults to <c>: </c>.</param>
@@ -249,14 +253,15 @@ namespace HRngBackend
         /// <param name="mdet_sep">The separator character(s) to separate the mentioned UIDs (optional). Defaults to <c>, </c>.</param>
         /// <param name="replies">Whether to count replies. Disabled by default.</param>
         /// <param name="ment_exc">Whether to not count mentioned accounts that are in the EntryCollection. Enabled by default.</param>
-        /// <returns>ne.</returns>
+        /// <exception cref="ArgumentException">Thrown if a specified column number does not exist.</exception>
+        /// <exception cref="FormatException">Thrown if <paramref name="comments"/> does not contain any UIDs for mentioned accounts.</exception>
         public void CountComments(List<FBComment> comments, int col = -1, int col_cmts = -1, string cmts_sep = ": ", string cmts_delim = null, int col_ment = -1, int col_mdet = -1, string mdet_sep = ", ", bool replies = false, bool ment_exc = true)
         {
             if (col == -1 && col_cmts == -1 && col_ment == -1 && col_mdet == -1) return; // Nothing to do
-            if (col != -1 && !Headers.Keys.Contains(col)) throw new Exception($"Invalid column number {col}");
-            if (col_cmts != -1 && !Headers.Keys.Contains(col_cmts)) throw new Exception($"Invalid column number {col_cmts}");
-            if (col_ment != -1 && !Headers.Keys.Contains(col_ment)) throw new Exception($"Invalid column number {col_ment}");
-            if (col_mdet != -1 && !Headers.Keys.Contains(col_mdet)) throw new Exception($"Invalid column number {col_mdet}");
+            if (col != -1 && !Headers.Keys.Contains(col)) throw new ArgumentException($"Invalid column number {col}");
+            if (col_cmts != -1 && !Headers.Keys.Contains(col_cmts)) throw new ArgumentException($"Invalid column number {col_cmts}");
+            if (col_ment != -1 && !Headers.Keys.Contains(col_ment)) throw new ArgumentException($"Invalid column number {col_ment}");
+            if (col_mdet != -1 && !Headers.Keys.Contains(col_mdet)) throw new ArgumentException($"Invalid column number {col_mdet}");
             cmts_delim = cmts_delim ?? Environment.NewLine;
             foreach (var entry in Entries)
             {
@@ -269,7 +274,7 @@ namespace HRngBackend
                         if (col != -1 || col_cmts != -1) cmt_text.Add($"{comment.AuthorID}{cmts_sep}{comment.CommentText}");
                         if (col_ment != -1 || col_mdet != -1)
                         {
-                            if (comment.Mentions_UID.Count == 0 && comment.Mentions_Handle.Count != 0) throw new Exception("muid must be true in FBPost.GetComments() for mentions counting to work");
+                            if (comment.Mentions_UID.Count == 0 && comment.Mentions_Handle.Count != 0) throw new FormatException("muid must be true in FBPost.GetComments() for mentions counting to work");
                             foreach (var uid in comment.Mentions_UID)
                             {
                                 if (!ment_exc || !UID.Contains(uid)) cmt_mentions.Add(uid);

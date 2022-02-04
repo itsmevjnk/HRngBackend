@@ -24,13 +24,14 @@ namespace HRngBackend
         ///   <item><description><c>Architecture</c> can be either <c>X86</c>, <c>X64</c>, <c>Arm</c> or <c>Arm64</c></description></item>
         ///  </list>
         /// </summary>
+        /// <exception cref="NotSupportedException">Thrown if the running OS is not supported.</exception>
         static OSCombo()
         {
             /* Get OS */
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Combo = "Linux";
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Combo = "OSX";
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Combo = "Windows";
-            else throw new InvalidOperationException("Unsupported operating system");
+            else throw new NotSupportedException("Unsupported operating system");
 
             /* Get architecture */
             Combo += "." + Convert.ToString(RuntimeInformation.OSArchitecture);

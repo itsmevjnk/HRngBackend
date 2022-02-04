@@ -35,6 +35,7 @@ namespace HRngBackend
         /// </summary>
         /// <param name="addr">The Excel-type cell address string to be converted.</param>
         /// <returns>A tuple of row-column indexes.</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="addr"/> argument is misformed.</exception>
         public (int row, int col) Index(string addr)
         {
             addr = addr.ToUpper(); // Normalize address to uppercase
@@ -51,11 +52,11 @@ namespace HRngBackend
                 else if (c >= 'A' && c <= 'Z')
                 {
                     /* Column */
-                    if (p_row) throw new Exception($"Column letter {c} appears in row number");
+                    if (p_row) throw new ArgumentException($"Column letter {c} appears in row number");
                     if (col == -1) col = 0;
                     col = col * 26 + c - 'A';
                 }
-                else throw new Exception($"Invalid character {c}");
+                else throw new ArgumentException($"Invalid character {c}");
             }
             return (row - 1, col);
         }
