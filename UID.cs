@@ -18,35 +18,28 @@ namespace HRngBackend
 {
     public static class UID
     {
-        /*
-         * public static Dictionary<string, long> Cache
-         *   User name to UID cache.
-         *   While it's possible to read and write directly from this dictionary,
-         *   this is not recommended, and improper use may result in undefined
-         *   behavior. Use Add() and Get() to insert and retrieve UIDs, and use
-         *   ClearCache() to clear the cache.
-         */
+        /// <summary>
+        ///  User name to UID cache.<br/>
+        ///  While it's possible to read and write directly from this dictionary, this is not recommended, and improper use may result in undefined behavior. Use <c>Add()</c> and <c>Get()</c> to insert and retrieve UIDs, and use <c>ClearCache()</c> to clear the cache.
+        /// </summary>
         public static Dictionary<string, long> Cache = new Dictionary<string, long>();
 
-        /*
-         * public static Mutex CacheMutex
-         *   Mutex object for the user name to UID cache above.
-         *   While it's also possible to use ConcurrentDirectory, it's overly
-         *   complicated for what we're trying to accomplish, which is making
-         *   sure that only one thread may have exclusive access to the cache.
-         */
+        /// <summary>
+        ///  Mutex object for the user name to UID cache above.<br/>
+        ///  While it's also possible to use <c>ConcurrentDirectory</c>, it's overly complicated for what we're trying to accomplish, which is making sure that only one thread may have exclusive access to the cache.
+        /// </summary>
         public static Mutex CacheMutex = new Mutex();
 
-        /*
-         * public static string GetHandle(string link)
-         *   Process a Facebook profile link and retrieve the profile's handle.
-         *   A handle is our extension of the Facebook user name, and can be either:
-         *    - the user name (if one exists in the link)
-         *    - :[UID] (if the UID exists instead of the user name, e.g.
-         *              https://www.facebook.com/profile.php?id=[UID])
-         *   Input : link: A [string] variable containing the Facebook profile link.
-         *   Output: The handle in [string] type, or "" if the passed URL is invalid.
-         */
+        /// <summary>
+        ///  Process a Facebook profile link and retrieve the profile's handle.<br/>
+        ///  A handle is our extension of the Facebook user name, and can be either:
+        ///  <list type="bullet">
+        ///   <item><description>the user name (if one exists in the link)</description></item>
+        ///   <item><description><c>:&lt;UID&gt;</c> (if the UID exists instead of the user name, e.g. <c>https://www.facebook.com/profile.php?id=&lt;UID&gt;</c>)</description></item>
+        ///  </list>
+        /// </summary>
+        /// <param name="link">A <c>string</c> variable containing the Facebook profile link.</param>
+        /// <returns>The handle in <c>string</c> type, or an empty string if the passed URL is invalid.</returns>
         public static string GetHandle(string link)
         {
             if (link.StartsWith(':') && link.Substring(1).All(char.IsDigit)) return link; // UID handle provided
@@ -77,10 +70,9 @@ namespace HRngBackend
                     else return query[0];
                 }
             }
-            /* 
-             * Now the first element contains the domain name, and we can use it to
-             * determine if it's a valid link
-             */
+            /// <summary>
+            ///  determine if it's a valid link
+            /// </summary>
             if (link_elements[0].EndsWith("m.me"))
             {
                 /* m.me/(UID or user name) */
@@ -123,16 +115,13 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public static bool Add(string link, long uid)
-         *   Processes the link to get the handle, then add an entry to the UID
-         *   cache. If the link already has the UID as part of it, this function
-         *   will still return [true], but no entries will be added.
-         *   Input : link: The Facebook profile link.
-         *           uid : The UID that is associated with it.
-         *   Output: true  if the entry can be added.
-         *           false if the link or UID is invalid.
-         */
+        /// <summary>
+        ///  Processes the link to get the handle, then add an entry to the UID cache.<br/>
+        ///  If the link already has the UID as part of it, this function will still return <c>true</c>, but no entries will be added.
+        /// </summary>
+        /// <param name="link">The Facebook profile link.</param>
+        /// <param name="uid">The UID that is associated with it.</param>
+        /// <returns><c>true</c> if the entry can be added, or <c>false</c> if the link or UID is invalid.</returns>
         public static bool Add(string link, long uid)
         {
             if (uid <= 0) return false; // Invalid UID
@@ -145,13 +134,11 @@ namespace HRngBackend
             return true;
         }
 
-        /*
-         * private static void AddHandle(string handle, long uid)
-         *   Adds an entry to the UID cache by handle.
-         *   Input : handle: The Facebook profile handle.
-         *           uid   : The UID that is associated with it.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Adds an entry to the UID cache by handle.
+        /// </summary>
+        /// <param name="handle">The Facebook profile handle.</param>
+        /// <param name="uid">The UID that is associated with it.</param>
         private static void AddHandle(string handle, long uid)
         {
             CacheMutex.WaitOne(); // Wait until mutex is released
@@ -160,12 +147,9 @@ namespace HRngBackend
             CacheMutex.ReleaseMutex(); // Release mutex after our operation finishes
         }
 
-        /*
-         * public static void ClearCache()
-         *   Clears the UID cache.
-         *   Input : none.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Clears the UID cache.
+        /// </summary>
         public static void ClearCache()
         {
             CacheMutex.WaitOne();
@@ -173,24 +157,14 @@ namespace HRngBackend
             CacheMutex.ReleaseMutex();
         }
 
-        /*
-         * private async static Task<long> LookupUID(string service_url,
-         *                                           IDictionary<string, string> data,
-         *                                           string xpath,
-         *                                           [CancellationToken ctoken])
-         *   Private helper function for looking up UID from services.
-         *   This function sends a POST request with data specified in [data] to
-         *   the service specified in [service_url], then retrieves the UID using
-         *   the XPath specified in [xpath] and converts it to a [long] integer.
-         *   Input : service_url: URL of the lookup service used.
-         *           data       : POST request data.
-         *           xpath      : XPath pointing to the element containing the UID
-         *                        returned by the service.
-         *           ctoken     : Cancellation token for cancelling the task (optional).
-         *   Output: The retrieved UID, or -1 on failure.
-         *           If ctoken is specified, -2 will be returned if the task is
-         *           cancelled.
-         */
+        /// <summary>
+        ///  Private helper function for looking up UID from services. This function sends a POST request with data specified in [data] to the service specified in [service_url], then retrieves the UID using the XPath specified in [xpath] and converts it to a [long] integer.
+        /// </summary>
+        /// <param name="service_url">URL of the lookup service used.</param>
+        /// <param name="data">POST request data.</param>
+        /// <param name="xpath">XPath pointing to the element containing the UID returned by the service.</param>
+        /// <param name="ctoken">Cancellation token for cancelling the task (optional).</param>
+        /// <returns>The retrieved UID, or -1 on failure. If <paramref name="ctoken"/> is specified, -2 will be returned if the task is cancelled.</returns>
         private async static Task<long> LookupUID(string service_url, IDictionary<string, string> data, string xpath, CancellationToken? ctoken = null)
         {
             var rq_content = new FormUrlEncodedContent(data); // POST request data, converted to work with HttpClient
@@ -248,25 +222,26 @@ namespace HRngBackend
             return -1; // Cannot retrieve UID
         }
 
-        /*
-         * public static async Task<long> Get(string link)
-         *   The main function of this library. This function attempts to retrieve
-         *   the UID of a Facebook link using these methods:
-         *    - Getting UID directly from link
-         *    - Cache lookup
-         *    - Lookup using existing UID lookup services
-         *    - Scraping from profile page (if Facebook login information is provided)
-         *   Input : link: The Facebook profile link to try to get its UID.
-         *   Output: The profile's UID, or one of these values on failure:
-         *            -1: Invalid link
-         *            -2: Cannot retrieve UID using any of the available methods
-         *            -3: Cannot retrieve UID, but it might be possible to do so using
-         *                the last method (i.e. we have no login information)
-         *            -4: Cannot retrieve UID because the provided Facebook account
-         *                has been ratelimited
-         *            -5: Cannot retrieve UID because the provided Facebook cookies
-         *                is invalid (i.e. signed out)
-         */
+        /// <summary>
+        ///  Attempt to retrieve the UID of a Facebook link using these methods:
+        ///  <list type="bullet">
+        ///   <item><description>Getting UID directly from link</description></item>
+        ///   <item><description>Cache lookup</description></item>
+        ///   <item><description>Lookup using existing UID lookup services</description></item>
+        ///   <item><description>Scraping from profile page (if Facebook login information is provided)</description></item>
+        ///  </list> 
+        /// </summary>
+        /// <param name="link">The Facebook profile link to try to get its UID.</param>
+        /// <returns>
+        ///  The profile's UID, or one of these values on failure:
+        ///  <list type="bullet">
+        ///   <item><description>-1: Invalid link</description></item>
+        ///   <item><description>-2: Cannot retrieve UID using any of the available methods</description></item>
+        ///   <item><description>-3: Cannot retrieve UID, but it might be possible to do so using the last method (i.e. we have no login information)</description></item>
+        ///   <item><description>-4: Cannot retrieve UID because the provided Facebook account has been ratelimited</description></item>
+        ///   <item><description>-5: Cannot retrieve UID because the provided Facebook cookies is invalid (i.e. signed out)</description></item>
+        ///  </list>
+        /// </returns>
         public static async Task<long> Get(string link)
         {
             string handle = GetHandle(link); // From now on we will work with this handle
@@ -358,6 +333,5 @@ namespace HRngBackend
             AddHandle(handle, uid);
             return uid;
         }
-
     }
 }

@@ -12,17 +12,12 @@ namespace HRngBackend
     {
         /* Private helper functions to keep our code modular */
 
-        /*
-         * private static string UASystemWindows()
-         *   Generates a random Microsoft Windows system information string.
-         *   The Windows NT version can be 6.1 (7), 6.2 (8), 6.3 (8.1), or 10.0 (10/11)
-         *   Note that NT 6.0 and earlier (Vista and earlier) are not included; the
-         *   Windows versions that are based on those are obsolete, and therefore, having
-         *   something like Chrome 94 paired with Windows XP would be highly unrealistic.
-         *   The architecture can be either 32-bit (Win32/x86) or 64-bit (Win64/x64).
-         *   Input : none.
-         *   Output: variable of type [string] containing the system information string.
-         */
+        /// <summary>
+        ///  Generates a random Microsoft Windows system information string.<br/>
+        ///  The Windows NT version can be <c>6.1</c> (7), <c>6.2</c> (8), <c>6.3</c> (8.1), or <c>10.0</c> (10/11). Note that NT 6.0 and earlier (Vista and earlier) are not included; the Windows versions that are based on those are obsolete, and therefore, having something like Chrome 94 paired with Windows XP would be highly unrealistic.<br/>
+        ///  The architecture can be either 32-bit (Win32/x86), 64-bit (Win64/x64), or WoW64 (32-bit binary running on 64-bit OS) (WOW64).
+        /// </summary>
+        /// <returns>A string containing the system information string.</returns>
         private static string UASystemWindows()
         {
             Random rand = new Random(); // Random generator object, available from System
@@ -40,19 +35,12 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * private static string UASystemOSX()
-         *   Generates a random macOS (formerly Mac OS X) system information string.
-         *   The macOS version is a random valid version from 10.10 (Yosemite) to
-         *   10.12.1 (Monterey). Older versions are not included as they're no longer
-         *   supported by Chrome (and probably most common browsers).
-         *   (Probably) for compatibility purposes, Apple seems to have decided that
-         *   Apple Silicon-based Macs would report as Intel-based Macs. However, if
-         *   this changes in the future, we might need to modify our code a bit to
-         *   include Apple Silicon architecture.
-         *   Input : none.
-         *   Output: variable of type [string] containing the system information string.
-         */
+        /// <summary>
+        ///  Generates a random macOS (formerly Mac OS X) system information string.<br/>
+        ///  The macOS version is a random valid version from 10.10 (Yosemite) to 10.12.1 (Monterey). Older versions are not included as they're no longer supported by Chrome (and probably most common browsers).<br/>
+        ///  (Probably) for compatibility purposes, Apple seems to have decided that Apple Silicon-based Macs would report as Intel-based Macs. However, if this changes in the future, we might need to modify our code a bit to include Apple Silicon architecture.
+        /// </summary>
+        /// <returns>A string containing the system information string.</returns>
         private static string UASystemOSX()
         {
             Random rand = new Random();
@@ -81,17 +69,12 @@ namespace HRngBackend
             return $"Macintosh; Intel Mac OS X {versions[idx]}";
         }
 
-        /*
-         * private static string UASystemLinux()
-         *   Generates a random Linux system information string.
-         *   Including the entire Linux platform list would be too time-consuming (Linux
-         *   has even been ported to Motorola 68k), so only the 3 most common platforms
-         *   are included: i686 (32-bit x86), x86_64 (64-bit x86, aka amd64), and
-         *   aarch64 (64-bit ARM).
-         *   As Wayland is not really popular yet, only X11 will be included.
-         *   Input : none.
-         *   Output: variable of type [string] containing the system information string.
-         */
+        /// <summary>
+        ///  Generates a random Linux system information string.<br/>
+        ///  Including the entire Linux platform list would be too time-consuming (Linux has even been ported to Motorola 68k), so only the 3 most common platforms are included: <c>i686</c> (32-bit x86), <c>x86_64</c> (64-bit x86, aka amd64), and <c>aarch64</c> (64-bit ARM).<br/>
+        ///  As Wayland is not really popular yet, only X11 will be included.
+        /// </summary>
+        /// <returns>A string containing the system information string.</returns>
         private static string UASystemLinux()
         {
             Random rand = new Random();
@@ -102,12 +85,10 @@ namespace HRngBackend
             return $"X11; Linux {platforms[idx]}";
         }
 
-        /*
-         * private static string UAPlatformFirefox()
-         *   Generates a random Mozilla Firefox platform information string.
-         *   Input : none.
-         *   Output: variable of type [string] containing the platform information string.
-         */
+        /// <summary>
+        ///  Generates a random Mozilla Firefox platform information string.
+        /// </summary>
+        /// <returns>A string containing the platform information string.</returns>
         private static string UAPlatformFirefox()
         {
             Random rand = new Random();
@@ -115,12 +96,10 @@ namespace HRngBackend
             return $"; rv:{ver}.0) Gecko/20100101 Firefox/{ver}.0";
         }
 
-        /*
-         * private static string UAPlatformChrome()
-         *   Generates a random Google Chrome/Chromium platform information string.
-         *   Input : none.
-         *   Output: variable of type [string] containing the platform information string.
-         */
+        /// <summary>
+        ///  Generates a random Google Chrome/Chromium platform information string.
+        /// </summary>
+        /// <returns>A string containing the platform information string.</returns>
         private static string UAPlatformChrome()
         {
             Random rand = new Random();
@@ -138,12 +117,10 @@ namespace HRngBackend
             return $") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{versions[idx]} Safari/537.36";
         }
 
-        /*
-         * public string Next()
-         *   Generates a random valid User-Agent string.
-         *   Input : none.
-         *   Output: variable of type [string] containing the User-Agent string.
-         */
+        /// <summary>
+        ///  Generates a random valid <c>User-Agent</c> string.
+        /// </summary>
+        /// <returns>A string containing the <c>User-Agent</c> string.</returns>
         public static string Next()
         {
             string ret = "Mozilla/5.0 ("; // Return string. The Mozilla/5.0 part is present for historical/backwards compatibility purposes. We also add a round bracket here to contain our randomized platform info.

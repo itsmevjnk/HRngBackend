@@ -14,18 +14,13 @@ namespace HRngBackend
 {
     public static class Cookies
     {
-        /*
-         * public static Dictionary<string, string>? FromKVPString(string kvpstr, [char kvsep], [char psep])
-         *   Parse a key-value pair string of <key>=<value>; form into a
-         *   string => string dictionary.
-         *   Input : kvpstr: Key-value pair string.
-         *           kvsep : Key-value separator character (optional).
-         *                   Defaults to = (equal).
-         *           psep  : Pair separator character (optional).
-         *                   Defaults to ; (semicolon).
-         *   Output: A string => string dictionary containing the parsed
-         *           cookies, or null if parsing fails.
-         */
+        /// <summary>
+        ///  Parse a key-value pair string of &lt;key&gt;=&lt;value&gt;; form into a string => string dictionary.
+        /// </summary>
+        /// <param name="kvpstr">Key-value pair string.</param>
+        /// <param name="kvsep">Key-value separator character (optional). Defaults to <c>=</c> (equal).</param>
+        /// <param name="psep">Pair separator character (optional). Defaults to <c>;</c> (semicolon).</param>
+        /// <returns>A string => string dictionary containing the parsed cookies, or null if parsing fails.</returns>
         public static Dictionary<string, string>? FromKVPString(string kvpstr, char kvsep = '=', char psep = ';')
         {
             kvpstr = kvpstr.Replace(" ", ""); // Remove all whitespaces
@@ -39,16 +34,11 @@ namespace HRngBackend
             return cookies;
         }
 
-        /*
-         * public static Dictionary<string, string>? FromTxt_String(string txtstr)
-         *   Parse a string containing Netscape formatted cookies
-         *   (also known as cookies.txt) into a string => string
-         *   dictionary.
-         *   Input : txtstr: The input string containing data from
-         *                   the cookies.txt-formatted file.
-         *   Output: A string => string dictionary containing the parsed
-         *           cookies, or null if parsing fails.
-         */
+        /// <summary>
+        ///  Parse a string containing Netscape formatted cookies (also known as <c>cookies.txt</c>) into a string =&gt; string dictionary.
+        /// </summary>
+        /// <param name="txtstr">The input string containing data from the <c>cookies.txt</c>-formatted file.</param>
+        /// <returns>A string => string dictionary containing the parsed cookies, or null if parsing fails.</returns>
         public static Dictionary<string, string>? FromTxt_String(string txtstr)
         {
             Dictionary<string, string> cookies = new Dictionary<string, string> { };
@@ -62,85 +52,67 @@ namespace HRngBackend
             return cookies;
         }
 
-        /*
-         * public static Dictionary<string, string>? FromTxt_File(string path)
-         *   Parse a Netscape formatted cookies file (aka cookies.txt)
-         *   into a string => string dictionary.
-         *   Input : path: Path to the cookies.txt-formatted file.
-         *   Output: A string => string dictionary containing the parsed
-         *           cookies, or null if parsing fails.
-         */
+        /// <summary>
+        ///  Parse a Netscape formatted cookies file (aka <c>cookies.txt</c>) into a string =&gt; string dictionary.
+        /// </summary>
+        /// <param name="path">Path to the <c>cookies.txt</c>-formatted file.</param>
+        /// <returns>A string =&gt; string dictionary containing the parsed cookies, or null if parsing fails.</returns>
         public static Dictionary<string, string>? FromTxt_File(string path)
         {
             return FromTxt_String(File.ReadAllText(path));
         }
 
-        /*
-         * public static void Se_LoadCookie(IWebDriver driver, string key, string value, string url = "")
-         *   Load a single cookie to a Selenium browser session.
-         *   Input : driver: The driver instance for the Selenium browser
-         *                   session.
-         *           key   : The cookie's key.
-         *           value : The cookie's value.
-         *           url   : URL to the domain for which the cookie will
-         *                   be stored for (optional). If specified, this
-         *                   function will load the web page before setting
-         *                   the cookie.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Load a single cookie to a Selenium browser session.
+        /// </summary>
+        /// <param name="driver">The driver instance for the Selenium browser session.</param>
+        /// <param name="key">The cookie's key.</param>
+        /// <param name="value">The cookie's value.</param>
+        /// <param name="url">URL to the domain for which the cookie will be stored for (optional). If specified, this function will load the web page before setting the cookie.</param>
         public static void Se_LoadCookie(IWebDriver driver, string key, string value, string url = "")
         {
             if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);
             driver.Manage().Cookies.AddCookie(new Cookie(key, value));
         }
 
-        /*
-         * public static void Se_LoadCookies(IWebDriver driver, IDictionary<string, string> cookies, string url = "")
-         *   Load a string => string dictionary containing cookies to a
-         *   Selenium browser session.
-         *   Input : driver : The driver instance for the Selenium browser
-         *                    session.
-         *           cookies: The string => string dictionary containing the
-         *                    cookies.
-         *           url    : URL to the domain for which the cookies will
-         *                    be stored for (optional). If specified, this
-         *                    function will load the web page before setting
-         *                    the cookies.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Load a string =&gt; string dictionary containing cookies to a Selenium browser session.
+        /// </summary>
+        /// <param name="driver">The driver instance for the Selenium browser session.</param>
+        /// <param name="cookies">The string =&gt; string dictionary containing the cookies.</param>
+        /// <param name="url">
+        ///  URL to the domain for which the cookies will be stored for (optional).<br/>
+        ///  If specified, this function will load the web page before setting the cookies.
+        /// </param>
         public static void Se_LoadCookies(IWebDriver driver, IDictionary<string, string> cookies, string url = "")
         {
             if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);
             foreach (var item in cookies) driver.Manage().Cookies.AddCookie(new Cookie(item.Key, item.Value));
         }
 
-        /*
-         * public static void Se_ClearCookies(IWebDriver driver, string url = "")
-         *   Clear all cookies for a domain in a Selenium browser session.
-         *   Input : driver: The driver instance for the Selenium browser
-         *                   session.
-         *           url   : URL to the domain of which the cookies will be
-         *                   deleted (optional). If specified, this function
-         *                   will load the web page before clearing the cookies.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Clear all cookies for a domain in a Selenium browser session.
+        /// </summary>
+        /// <param name="driver">The driver instance for the Selenium browser session.</param>
+        /// <param name="url">
+        ///  URL to the domain of which the cookies will be deleted (optional).<br/>
+        ///  If specified, this function will load the web page before clearing the cookies.
+        /// </param>
         public static void Se_ClearCookies(IWebDriver driver, string url = "")
         {
             if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);
             driver.Manage().Cookies.DeleteAllCookies();
         }
 
-        /*
-         * public static Dictionary<string, string> Se_SaveCookies(IWebDriver driver, [string url])
-         *  Get all cookies associated with a domain in a Selenium browser
-         *  session.
-         *  Input : driver: The driver instance for the Selenium browser
-         *                  session.
-         *          url   : The URL to retrieve cookies for (optional).
-         *                  If specified, this function will load the page
-         *                  before getting its cookies.
-         *  Output: A string => string dictionary containing the cookies.
-         */
+        /// <summary>
+        ///  Get all cookies associated with a domain in a Selenium browser session.
+        /// </summary>
+        /// <param name="driver">The driver instance for the Selenium browser session.</param>
+        /// <param name="url">
+        ///  The URL to retrieve cookies for (optional).<br/>
+        ///  If specified, this function will load the page before getting its cookies.
+        /// </param>
+        /// <returns>A string =&gt; string dictionary containing the cookies.</returns>
         public static Dictionary<string, string> Se_SaveCookies(IWebDriver driver, string url = "")
         {
             if (url != "" && driver.Url != url) driver.Navigate().GoToUrl(url);

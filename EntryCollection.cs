@@ -14,55 +14,37 @@ namespace HRngBackend
 {
     public class EntryCollection
     {
-        /*
-         * public List<Entry> Entries
-         *   List of Entry objects.
-         */
+        /// <summary>
+        ///  List of Entry objects.
+        /// </summary>
         public List<Entry> Entries = new List<Entry>();
 
-        /*
-         * public HashSet<long> UID
-         *   Set of all UIDs of all entries.
-         */
+        /// <summary>
+        ///  Set of all UIDs of all entries.
+        /// </summary>
         public HashSet<long> UID = new HashSet<long>();
 
-        /*
-         * public Dictionary<int, string> Headers
-         *   List of header names of each column in the
-         *   input/output spreadsheet.
-         */
+        /// <summary>
+        ///  List of header names of each column in the input/output spreadsheet.
+        /// </summary>
         public Dictionary<int, string> Headers = new Dictionary<int, string>();
 
-        /*
-         * public int UIDColumn
-         *   The column number (starting from 0) where the UIDs
-         *   will be stored.
-         */
+        /// <summary>
+        ///  The column number (starting from 0) where the UIDs will be stored.
+        /// </summary>
         public int UIDColumn = -1;
 
-        /*
-         * public void FromSpreadsheet(Spreadsheet sheet, [int start_row],
-         *                             [string uid_name], [int uid_col],
-         *                             [string uid_delim])
-         *   Populate the EntryCollection object with information
-         *   from a spreadsheet.
-         *   Input : sheet    : The input spreadsheet.
-         *           start_row: The starting row number (starting from 0)
-         *                      of the input spreadsheet (i.e. the row
-         *                      where headers are put in) (optional).
-         *                      Defaults to 0.
-         *           uid_name : The name of the UID column (optional).
-         *                      Defaults to "UID".
-         *           uid_col  : The column number (starting from 0)
-         *                      where the UIDs will be stored (optional).
-         *                      If specified, this will override uid_name
-         *                      unless the specified column number is out
-         *                      of the spreadsheet's range.
-         *           uid_delim: The delimiter character(s) for separating
-         *                      UIDs (optional). Defaults to
-         *                      Environment.NewLine.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Populate the EntryCollection object with information from a spreadsheet.
+        /// </summary>
+        /// <param name="sheet">The input spreadsheet.</param>
+        /// <param name="start_row">The starting row number (starting from 0) of the input spreadsheet (i.e. the row where headers are put in) (optional). Defaults to 0.</param>
+        /// <param name="uid_name">The name of the UID column (optional). Defaults to <c>UID</c>.</param>
+        /// <param name="uid_col">
+        ///  The column number (starting from 0) where the UIDs will be stored (optional).<br/>
+        ///  If specified, this will override <paramref name="uid_name"/> unless the specified column number is out of the spreadsheet's range.
+        /// </param>
+        /// <param name="uid_delim">The delimiter character(s) for separating UIDs (optional). Defaults to <c>Environment.NewLine</c>.</param>
         public void FromSpreadsheet(Spreadsheet sheet, int start_row = 0, string uid_name = "UID", int uid_col = -1, string uid_delim = null)
         {
             uid_delim = uid_delim ?? Environment.NewLine; // Set the UID delimiter
@@ -116,19 +98,12 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public Spreadsheet ToSpreadsheet([int start_row], [string uid_delim])
-         *   Outputs a Spreadsheet with information from the EntryCollection.
-         *   Input : start_row: The starting row number (starting from 0)
-         *                      for the resulting spreadsheet (which is
-         *                      where the headers will go) (optional).
-         *                      Defaults to 0.
-         *           uid_delim: The delimiter character(s) for separating
-         *                      UIDs (optional). Defaults to
-         *                      Environment.NewLine.
-         *   Output: A Spreadsheet object containing the generated
-         *           spreadsheet.
-         */
+        /// <summary>
+        ///  Outputs a Spreadsheet with information from the EntryCollection.
+        /// </summary>
+        /// <param name="start_row">The starting row number (starting from 0) for the resulting spreadsheet (which is where the headers will go) (optional). Defaults to 0.</param>
+        /// <param name="uid_delim">The delimiter character(s) for separating UIDs (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <returns>A <c>Spreadsheet</c> object containing the generated spreadsheet.</returns>
         public Spreadsheet ToSpreadsheet(int start_row = 0, string uid_delim = null)
         {
             uid_delim = uid_delim ?? Environment.NewLine;
@@ -151,14 +126,11 @@ namespace HRngBackend
             return sheet;
         }
 
-        /*
-         * public int AddColumn(string header)
-         *   Append a column to the EntryCollection. This column will be
-         *   placed at any empty space in between existing columns, or
-         *   the end of the existing columns if there's no empty space.
-         *   Input : header: The header name for the new column.
-         *   Output: The column number of the new column.
-         */
+        /// <summary>
+        ///  Append a column to the EntryCollection. This column will be placed at any empty space in between existing columns, or the end of the existing columns if there's no empty space.
+        /// </summary>
+        /// <param name="header">The header name for the new column.</param>
+        /// <returns>The column number of the new column.</returns>
         public int AddColumn(string header)
         {
             int col, maxcol = Headers.Keys.Max();
@@ -171,12 +143,10 @@ namespace HRngBackend
             return col;
         }
 
-        /*
-         * public void RemoveColumn(int col)
-         *   Remove a column from the EntryCollection.
-         *   Input : col: The column number of the column to be removed.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Remove a column from the EntryCollection.
+        /// </summary>
+        /// <param name="col">The column number of the column to be removed.</param>
         public void RemoveColumn(int col)
         {
             if (!Headers.Keys.Contains(col)) throw new Exception($"Attempting to remove nonexistant column {col}");
@@ -188,33 +158,16 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public void CountReactions(List<FBReact> reactions, [int col],
-         *                            [int col_log], [string log_sep], [string log_delim],
-         *                            [ReactionEnum[] include], [ReactionEnum[] exclude])
-         *   Count the number of reactions associated with each entry.
-         *   Input : reactions: A list of FBReact objects storing reactions
-         *                      to be counted.
-         *           col      : The column number to store reaction count.
-         *                      Must be set to store the reaction count.
-         *           col_log  : The column number to store information on
-         *                      which reactions were used with which UID.
-         *                      Must be set to store this data.
-         *           log_sep  : The string to separate the UID from the
-         *                      reaction type in a line (optional).
-         *                      Defaults to ": ".
-         *           log_delim: The delimiter to use in the log column if
-         *                      there are multiple UIDs reacting to the
-         *                      post (optional). Defaults to
-         *                      Environment.NewLine.
-         *           include  : Array of reaction types to include
-         *                      (optional). If not specified, all types
-         *                      will be included.
-         *           exclude  : Array of reaction types to exclude
-         *                      (optional). If not specified, no types
-         *                      will be excluded.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Count the number of reactions associated with each entry.
+        /// </summary>
+        /// <param name="reactions">A list of FBReact objects storing reactions to be counted.</param>
+        /// <param name="col">The column number to store reaction count. Must be set to store the reaction count.</param>
+        /// <param name="col_log">The column number to store information on which reactions were used with which UID. Must be set to store this data.</param>
+        /// <param name="log_sep">The string to separate the UID from the reaction type in a line (optional). Defaults to <c>: </c>.</param>
+        /// <param name="log_delim">The delimiter to use in the log column if there are multiple UIDs reacting to the post (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <param name="include">Array of reaction types to include (optional). If not specified, all types will be included.</param>
+        /// <param name="exclude">Array of reaction types to exclude (optional). If not specified, no types will be excluded.</param>
         public void CountReactions(List<FBReact> reactions, int col = -1, int col_log = -1, string log_sep = ": ", string log_delim = null, ReactionEnum[] include = null, ReactionEnum[] exclude = null)
         {
             if (col == -1 && col_log == -1) return; // Nothing to do
@@ -248,22 +201,13 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public void CountShares(List<long> shares, [int col],
-         *                         [int col_log], [string log_delim])
-         *   Count the number of post shares associated with each entry.
-         *   Input : shares   : A list of UIDs of accounts that shared the
-         *                      post.
-         *           col      : The column number to store share count.
-         *                      Must be set to store the share count.
-         *           col_log  : The column number to store information on
-         *                      which account shared the post.
-         *                      Must be set to store this data.
-         *           log_delim: The delimiter to use in the log column if
-         *                      there are multiple UIDs sharing the post
-         *                      (optional). Defaults to Environment.NewLine.
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Count the number of post shares associated with each entry.
+        /// </summary>
+        /// <param name="shares">A list of UIDs of accounts that shared the post.</param>
+        /// <param name="col">The column number to store share count. Must be set to store the share count.</param>
+        /// <param name="col_log">The column number to store information on which account shared the post. Must be set to store this data.</param>
+        /// <param name="log_delim">The delimiter to use in the log column if there are multiple UIDs sharing the post (optional). Defaults to <c>Environment.NewLine</c>.</param>
         public void CountShares(List<long> shares, int col = -1, int col_log = -1, string log_delim = null)
         {
             if (col == -1 && col_log == -1) return; // Nothing to do
@@ -292,38 +236,20 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public void CountComments(List<FBComment> comments, [int col],
-         *                          [int col_cmts], [string cmts_sep], [string cmts_delim],
-         *                          [int col_ment],
-         *                          [int col_mdet], [string mdet_sep],
-         *                          [bool replies], [bool ment_exc])
-         *   Count the number of comments made by each entry.
-         *   Input : comments: A list of FBComment objects for each 
-         *                     comment to be checked.
-         *           col       : The column number to store comments count.
-         *                       Must be set to store this data.
-         *           col_cmts  : The column number to store comment text.
-         *                       Must be set to store this data.
-         *           cmts_sep  : The separator character(s) to separate the
-         *                       UID from the comment text (optional).
-         *                       Defaults to ": ".
-         *           cmts_delim: The delimiter character(s) to separate
-         *                       comments (optional). Defaults to
-         *                       Environment.NewLine.
-         *           col_ment  : The column number to store mentions count.
-         *                       Must be set to store this data.
-         *           col_mdet  : The column number to store detailed
-         *                       information on mentions (i.e. which accounts
-         *                       were mentioned). Must be set to store
-         *                       this data.
-         *           mdet_sep  : The separator character(s) to separate the
-         *                       mentioned UIDs (optional). Defaults to ", ".
-         *           replies   : Whether to count replies. Disabled by default.
-         *           ment_exc  : Whether to not count mentioned accounts that
-         *                       are in the EntryCollection. Enabled by default.
-         * Output: none.
-         */
+        /// <summary>
+        ///  Count the number of comments made by each entry.
+        /// </summary>
+        /// <param name="comments">A list of FBComment objects for each comment to be checked.</param>
+        /// <param name="col">The column number to store comments count. Must be set to store this data.</param>
+        /// <param name="col_cmts">The column number to store comment text. Must be set to store this data.</param>
+        /// <param name="cmts_sep">The separator character(s) to separate the UID from the comment text (optional). Defaults to <c>: </c>.</param>
+        /// <param name="cmts_delim">The delimiter character(s) to separate comments (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <param name="col_ment">The column number to store mentions count. Must be set to store this data.</param>
+        /// <param name="col_mdet">The column number to store detailed information on mentions (i.e. which accounts were mentioned). Must be set to store this data.</param>
+        /// <param name="mdet_sep">The separator character(s) to separate the mentioned UIDs (optional). Defaults to <c>, </c>.</param>
+        /// <param name="replies">Whether to count replies. Disabled by default.</param>
+        /// <param name="ment_exc">Whether to not count mentioned accounts that are in the EntryCollection. Enabled by default.</param>
+        /// <returns>ne.</returns>
         public void CountComments(List<FBComment> comments, int col = -1, int col_cmts = -1, string cmts_sep = ": ", string cmts_delim = null, int col_ment = -1, int col_mdet = -1, string mdet_sep = ", ", bool replies = false, bool ment_exc = true)
         {
             if (col == -1 && col_cmts == -1 && col_ment == -1 && col_mdet == -1) return; // Nothing to do

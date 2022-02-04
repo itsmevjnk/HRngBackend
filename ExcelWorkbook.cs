@@ -17,21 +17,14 @@ namespace HRngBackend
 {
     public static class ExcelWorkbook
     {
-        /*
-         * public static List<KeyValuePair<string, Spreadsheet>> FromStream(Stream input, [string password],
-         *                                                                  [Encoding encoding], [bool open])
-         *   Parse a stream of XLS (BIFF2-8) or XLSX/XLSB (OpenXml) data.
-         *   Input : input   : The XLS/XLSX data stream to be parsed.
-         *           password: The workbook's password (optional).
-         *           encoding: The fallback encoding to be used if it can't
-         *                     be determined (optional). Defaults to CP1252.
-         *           open    : Whether to leave the stream open after parsing.
-         *                     Set to true by default (so the stream can be
-         *                     manually closed by caller).
-         *   Output: A list of key-value pairs with the sheet's name as the
-         *           key and its corresponding Spreadsheet object as the
-         *           value.
-         */
+        /// <summary>
+        ///  Parse a stream of XLS (BIFF2-8) or XLSX/XLSB (OpenXml) data.
+        /// </summary>
+        /// <param name="input">The XLS/XLSX data stream to be parsed.</param>
+        /// <param name="password">The workbook's password (optional).</param>
+        /// <param name="encoding">The fallback encoding to be used if it can't be determined (optional). Defaults to CP1252.</param>
+        /// <param name="open">Whether to leave the stream open after parsing. Set to true by default (so the stream can be manually closed by caller).</param>
+        /// <returns>A list of key-value pairs with the sheet's name as the key and its corresponding <c>Spreadsheet</c> object as the value.</returns>
         public static List<KeyValuePair<string, Spreadsheet>> FromStream(Stream input, string? password = null, Encoding? encoding = null, bool open = true)
         {
             Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); // For CP1252 on .NET Core
@@ -70,14 +63,13 @@ namespace HRngBackend
             return sheets;
         }
 
-        /*
-         * public static List<KeyValuePair<string, Spreadsheet>> FromFile(string fname, [string password],
-         *                                                               [Encoding encoding])
-         *   Parse an Excel workbook.
-         *   Input : fname: The path to the Excel workbook to be parsed.
-         *           The other two arguments are the same as in FromStream().
-         *   Output: same as FromStream().
-         */
+        /// <summary>
+        ///  Parse an Excel workbook.
+        /// </summary>
+        /// <param name="fname">The path to the Excel workbook to be parsed.</param>
+        /// <param name="password">The workbook's password (optional).</param>
+        /// <param name="encoding">The fallback encoding to be used if it can't be determined (optional). Defaults to CP1252.</param>
+        /// <returns>A list of key-value pairs with the sheet's name as the key and its corresponding <c>Spreadsheet</c> object as the value.</returns>
         public static List<KeyValuePair<string, Spreadsheet>> FromFile(string fname, string? password = null, Encoding? encoding = null)
         {
             using (var file = File.Open(fname, FileMode.Open, FileAccess.Read, FileShare.Read))

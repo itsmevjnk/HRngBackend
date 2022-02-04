@@ -5,16 +5,11 @@
  * Author    : itsmevjnk
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace HRngBackend
 {
-    /*
-     * public enum ReactionEnum
-     *   Enumeration for storing reaction type.
-     */
+    /// <summary>
+    ///  Enumeration for storing reaction type.
+    /// </summary>
     public enum ReactionEnum
     {
         None = -1,
@@ -31,22 +26,19 @@ namespace HRngBackend
 
     public class FBReact
     {
-        /*
-         * public long UserID
-         *   The user's ID.
-         */
+        /// <summary>
+        ///  The user's ID.
+        /// </summary>
         public long UserID = -1;
 
-        /*
-         * public string UserName
-         *   The user's name (optional).
-         */
+        /// <summary>
+        ///  The user's name (optional).
+        /// </summary>
         public string UserName = "";
         
-        /*
-         * public ReactionEnum Reaction
-         *   The user's reaction.
-         */
+        /// <summary>
+        ///  The user's reaction.
+        /// </summary>
         public ReactionEnum Reaction = ReactionEnum.None;
     }
 }

@@ -7,37 +7,23 @@
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections;
 
 namespace HRngBackend
 {
     public static class CSV
     {
-        /*
-         * public static Spreadsheet FromStream(Stream input, [char delimiter],
-         *                                      [char escape], [string newline])
-         *   Parse a stream of CSV-formatted data.
-         *   Input : input    : The CSV-formatted data stream.
-         *           encoding : The stream's encoding (optional).
-         *                      Defaults to UTF-8.
-         *           bom      : Whether to detect encoding from byte
-         *                      order mark (BOM) (optional).
-         *                      Disabled by default.
-         *           delimiter: The delimiter between cells in a row
-         *                      (optional). Defaults to comma (,).
-         *           escape   : The enclosing character used in cases
-         *                      such as multi-line cells. Defaults to
-         *                      double quote (").
-         *           newline  : The new line character(s) used in the
-         *                      CSV string. If not specified, any
-         *                      combination of \r and \n will be used.
-         *           The default values of delimiter and escape are
-         *           compliant with IETF RFC 4180.
-         *   Output: A Spreadsheet instance generated from the input.
-         */
+        /// <summary>
+        ///  Parse a stream of CSV-formatted data.
+        /// </summary>
+        /// <param name="input">The CSV-formatted data stream.</param>
+        /// <param name="encoding">The stream's encoding (optional). Defaults to UTF-8.</param>
+        /// <param name="bom">Whether to detect encoding from byte order mark (BOM) (optional). Disabled by default.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="newline">The new line character(s) used in the CSV string. If not specified, any combination of <c>\r</c> and <c>\n</c> will be used.</param>
+        /// <returns>A <c>Spreadsheet</c> instance generated from the input.</returns>
         public static Spreadsheet FromStream(Stream input, Encoding encoding = null, bool bom = false, char delimiter = ',', char escape = '"', string newline = "")
         {
             encoding = encoding ?? Encoding.UTF8;
@@ -124,23 +110,14 @@ namespace HRngBackend
             return output;
         }
 
-        /*
-         * public static Spreadsheet FromString(string input, [char delimiter],
-         *                                      [char escape], [string newline])
-         *   Parse a string containing CSV-formatted data.
-         *   Input : input    : The CSV-formatted data.
-         *           delimiter: The delimiter between cells in a row
-         *                      (optional). Defaults to comma (,).
-         *           escape   : The enclosing character used in cases
-         *                      such as multi-line cells. Defaults to
-         *                      double quote (").
-         *           newline  : The new line character(s) used in the
-         *                      CSV string. If not specified, any
-         *                      combination of \r and \n will be used.
-         *           The default values of delimiter and escape are
-         *           compliant with IETF RFC 4180.
-         *   Output: A Spreadsheet instance generated from the input.
-         */
+        /// <summary>
+        ///  Parse a string containing CSV-formatted data.
+        /// </summary>
+        /// <param name="input">The CSV-formatted data.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="newline">The new line character(s) used in the CSV string. If not specified, any combination of <c>\r</c> and <c>\n</c> will be used.</param>
+        /// <returns>A <c>Spreadsheet</c> instance generated from the input.</returns>
         public static Spreadsheet FromString(string input, char delimiter = ',', char escape = '"', string newline = "")
         {
             using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(input)))
@@ -149,21 +126,16 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public static Spreadsheet FromFile(string fname, [char delimiter],
-         *                                    [char escape], [string newline])
-         *   Parse a CSV file.
-         *   Input : fname   : The path (absolute or relative to the
-         *                     backend) to the CSV file.
-         *           encoding: The file's encoding (optional).
-         *                     Defaults to UTF-8.
-         *           bom     : Whether the encoding is detected using
-         *                     the file's byte order mark (BOM)
-         *                     (optional). Defaults to enabled.
-         *           The other three arguments are the same as in
-         *           FromString().
-         *   Output: A Spreadsheet instance generated from the input.
-         */
+        /// <summary>
+        ///  Parse a CSV file.
+        /// </summary>
+        /// <param name="fname">The path (absolute or relative to the backend) to the CSV file.</param>
+        /// <param name="encoding">The file's encoding (optional). Defaults to UTF-8.</param>
+        /// <param name="bom">Whether the encoding is detected using the file's byte order mark (BOM) (optional). Defaults to enabled.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="newline">The new line character(s) used in the CSV string. If not specified, any combination of <c>\r</c> and <c>\n</c> will be used.</param>
+        /// <returns>A <c>Spreadsheet</c> instance generated from the input.</returns>
         public static Spreadsheet FromFile(string fname, Encoding encoding = null, bool bom = true, char delimiter = ',', char escape = '"', string newline = "")
         {
             encoding = encoding ?? Encoding.UTF8;
@@ -173,30 +145,17 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public static void ToStream(Spreadsheet sheet, Stream stream,
-         *                             [Encoding encoding],
-         *                             [char delimiter], [char escape],
-         *                             [string sheet_nl], [string newline])
-         *   Writes the spreadsheet to a CSV-formatted stream.
-         *   Input : sheet    : The Spreadsheet object to be written.
-         *           stream   : The destination stream.
-         *           encoding : The stream's encoding. Set to UTF-8
-         *                      by default.
-         *           delimiter: The delimiter between cells in a row
-         *                      (optional). Defaults to comma (,).
-         *           escape   : The enclosing character used in cases
-         *                      such as multi-line cells. Defaults to
-         *                      double quote (").
-         *           sheet_nl : The new line character(s) used in the
-         *                      spreadsheet (optional). Defaults to
-         *                      Environment.NewLine.
-         *           newline  : The new line character(s) used in the
-         *                      CSV string (optional). Defaults to
-         *                      \r\n.
-         *           The default values are compliant with IETF RFC 4180.
-         *   Output: A string of CSV-formatted data.
-         */
+        /// <summary>
+        ///  Writes the spreadsheet to a CSV-formatted stream.
+        /// </summary>
+        /// <param name="sheet">The Spreadsheet object to be written.</param>
+        /// <param name="stream">The destination stream.</param>
+        /// <param name="encoding">The stream's encoding. Set to UTF-8 by default.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="sheet_nl">The new line character(s) used in the spreadsheet (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <param name="newline">The new line character(s) used in the CSV string (optional). Defaults to <c>\r\n</c>.</param>
+        /// <returns>A string of CSV-formatted data.</returns>
         public static void ToStream(Spreadsheet sheet, Stream stream, Encoding encoding = null, char delimiter = ',', char escape = '"', string sheet_nl = null, string newline = "\r\n")
         {
             using(StreamWriter writer = new StreamWriter(stream, encoding ?? Encoding.UTF8))
@@ -231,26 +190,15 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public static string ToString(Spreadsheet sheet, [char delimiter],
-         *                               [char escape], [string sheet_nl],
-         *                               [string newline])
-         *   Writes the spreadsheet to a CSV-formatted string.
-         *   Input : sheet    : The Spreadsheet object to be written.
-         *           delimiter: The delimiter between cells in a row
-         *                      (optional). Defaults to comma (,).
-         *           escape   : The enclosing character used in cases
-         *                      such as multi-line cells. Defaults to
-         *                      double quote (").
-         *           sheet_nl : The new line character(s) used in the
-         *                      spreadsheet (optional). Defaults to
-         *                      Environment.NewLine.
-         *           newline  : The new line character(s) used in the
-         *                      CSV string (optional). Defaults to
-         *                      \r\n.
-         *           The default values are compliant with IETF RFC 4180.
-         *   Output: A string of CSV-formatted data.
-         */
+        /// <summary>
+        ///  Writes the spreadsheet to a CSV-formatted string.
+        /// </summary>
+        /// <param name="sheet">The Spreadsheet object to be written.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="sheet_nl">The new line character(s) used in the spreadsheet (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <param name="newline">The new line character(s) used in the CSV string (optional). Defaults to <c>\r\n</c>.</param>
+        /// <returns>A string of CSV-formatted data.</returns>
         public static string ToString(Spreadsheet sheet, char delimiter = ',', char escape = '"', string sheet_nl = null, string newline = "\r\n")
         {
             using(MemoryStream stream = new MemoryStream())
@@ -260,19 +208,15 @@ namespace HRngBackend
             }
         }
 
-        /*
-         * public static void ToFile(Spreadsheet sheet, string fname,
-         *                           [Encoding encoding], [char delimiter],
-         *                           [char escape], [string sheet_nl],
-         *                           [string newline])
-         *   Writes the spreadsheet to a CSV file.
-         *   Input : fname   : The path (absolute or relative to the
-         *                     backend) to the CSV file.
-         *           encoding: The encoding to be used in the file.
-         *                     Defaults to UTF-8.
-         *           Other arguments are the same as in ToString().
-         *   Output: none.
-         */
+        /// <summary>
+        ///  Writes the spreadsheet to a CSV file.
+        /// </summary>
+        /// <param name="fname">The path (absolute or relative to the backend) to the CSV file.</param>
+        /// <param name="encoding">The encoding to be used in the file. Defaults to UTF-8.</param>
+        /// <param name="delimiter">The delimiter between cells in a row (optional). Defaults to <c>,</c> (comma).</param>
+        /// <param name="escape">The enclosing character used in cases such as multi-line cells. Defaults to <c>"</c> (double quote).</param>
+        /// <param name="sheet_nl">The new line character(s) used in the spreadsheet (optional). Defaults to <c>Environment.NewLine</c>.</param>
+        /// <param name="newline">The new line character(s) used in the CSV string (optional). Defaults to <c>\r\n</c>.</param>
         public static void ToFile(Spreadsheet sheet, string fname, Encoding encoding = null, char delimiter = ',', char escape = '"', string sheet_nl = null, string newline = "\r\n")
         {
             using(FileStream stream = File.Create(fname))

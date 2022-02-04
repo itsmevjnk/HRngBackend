@@ -11,25 +11,19 @@ namespace HRngBackend
 {
     public static class BaseDir
     {
-        /*
-         * public static string CommonBase
-         *   The base directory where common data (e.g. config
-         *   files) is stored.
-         */
+        /// <summary>
+        ///  The base directory where common data (e.g. config files) is stored.
+        /// </summary>
         public static string CommonBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        /*
-         * public static string PlatformBase
-         *   The base directory where platform-specific data
-         *   (e.g. browser or driver) is stored.
-         */
+        /// <summary>
+        ///  The base directory where platform-specific data (e.g. browser or driver) is stored.
+        /// </summary>
         public static string PlatformBase = Path.Combine(CommonBase, OSCombo.Combo);
 
-        /*
-         * static BaseDir()
-         *   Class constructor. Creates the PlatformBase directory
-         *   if it doesn't exist.
-         */
+        /// <summary>
+        ///  Class constructor. Creates the PlatformBase directory if it doesn't exist.
+        /// </summary>
         static BaseDir()
         {
             Directory.CreateDirectory(PlatformBase);
