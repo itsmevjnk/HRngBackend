@@ -274,7 +274,7 @@ namespace HRngBackend
                         if (col != -1 || col_cmts != -1) cmt_text.Add($"{comment.AuthorID}{cmts_sep}{comment.CommentText}");
                         if (col_ment != -1 || col_mdet != -1)
                         {
-                            if (comment.Mentions_UID.Count == 0 && comment.Mentions_Handle.Count != 0) throw new FormatException("muid must be true in FBPost.GetComments() for mentions counting to work");
+                            if (comment.Mentions_UID.Count == 0 && comment.Mentions_Handle.Count != 0) throw new FormatException("muid must be true in IFBPost.GetComments() for mentions counting to work");
                             foreach (var uid in comment.Mentions_UID)
                             {
                                 if (!ment_exc || !UID.Contains(uid)) cmt_mentions.Add(uid);

@@ -18,6 +18,7 @@ As of now, the HRng backend contains resources for:
 * Version string parsing (`Versioning.cs`)
 * Browser/driver release storage class (`Release.cs`)
 * Interface for browser initialization (`IBrowserHelper.cs`)
+* Interface for Facebook posts (`IFBPost.cs`)
 
 **Frontend-facing features:**
 * Parsing and loading cookies to HTTP client and Selenium (`Cookies.cs`)
