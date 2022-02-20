@@ -143,7 +143,7 @@ namespace HRngBackend
         {
             CacheMutex.WaitOne(); // Wait until mutex is released
             foreach (var item in Cache.Where(kvp => kvp.Value == uid).ToList()) Cache.Remove(item.Key); // Remove all existing cache entries with our UID since each UID can only be associated with an user name
-            Cache.Add(handle, uid); // Add to cache
+            if (!Cache.ContainsKey(handle)) Cache.Add(handle, uid); // Add to cache
             CacheMutex.ReleaseMutex(); // Release mutex after our operation finishes
         }
 
