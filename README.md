@@ -1,5 +1,6 @@
 ﻿# HRngBackend
 The backend component of HRng.
+Note that this does not contain any functions for Facebook operations; an operations module such as **HRngSelenium** is needed.
 
 ## Installation
 Build this project using Visual Studio or `dotnet` (refer to the solution's `README.md`).
@@ -15,10 +16,8 @@ As of now, the HRng backend contains resources for:
 * User-Agent string generation (`UserAgent.cs`)
 * Standardized common and platform-specific base directories (`BaseDir.cs`)
 * Operating system - architecture combo string generation (`OSCombo.cs`)
-* Version string parsing (`Versioning.cs`)
-* Browser/driver release storage class (`Release.cs`)
-* Interface for browser initialization (`IBrowserHelper.cs`)
 * Interface for Facebook posts (`IFBPost.cs`)
+* Structures for Facebook comments (`FBComment.cs`) and reactions (`FBReact.cs`)
 
 **Frontend-facing features:**
 * Parsing and loading cookies to HTTP client and Selenium (`Cookies.cs`)
@@ -26,12 +25,7 @@ As of now, the HRng backend contains resources for:
 * Reading Excel workbooks (`ExcelWorkbook.cs`)
 * Spreadsheet manipulation (`Spreadsheet.cs`)
 * Facebook user ID retrieval (`UID.cs`)
-* Facebook post scraping (`FBComment.cs`, `FBPost.cs`, `FBReact.cs`)
-* Facebook credentials-based login (`FBLogin.cs`)
-* 7-Zip binary serving (`SevenZip.cs`)
 * Input/output person entry manipulation (`Entry.cs`, `EntryCollection.cs`)
-* Google Chrome/Chromium initialization (`ChromeHelper.cs`)
-* Mozilla Firefox initialization (`FirefoxHelper.cs`)
 
 These feature(s) are planned to be added:
 * Facebook post poll scraping
