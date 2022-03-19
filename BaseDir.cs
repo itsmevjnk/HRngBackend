@@ -4,8 +4,8 @@
  * Author    : itsmevjnk
  */
 
+using System;
 using System.IO;
-using System.Reflection;
 
 namespace HRngBackend
 {
@@ -14,7 +14,7 @@ namespace HRngBackend
         /// <summary>
         ///  The base directory where common data (e.g. config files) is stored.
         /// </summary>
-        public static string CommonBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string CommonBase = AppContext.BaseDirectory;
 
         /// <summary>
         ///  The base directory where platform-specific data (e.g. browser or driver) is stored.
