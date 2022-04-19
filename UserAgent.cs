@@ -127,21 +127,15 @@ namespace HRngBackend
 
             /* System information */
             Random rand = new Random(); // This will be used throughout this function
-            switch (rand.Next(3)) // As sad as this looks, turns out this is how to call a random function in C#
+            switch (rand.Next(2)) // As sad as this looks, turns out this is how to call a random function in C#
             {
                 case 0: ret += UASystemWindows(); break;
                 case 1: ret += UASystemOSX(); break;
-                case 2: ret += UASystemLinux(); break;
+                // Removed Linux as of now due to issues with m.facebook.com and mbasic.facebook.com
             }
 
             /* Platform information */
-            switch (rand.Next(2))
-            {
-                case 0: ret += UAPlatformChrome(); break;
-                case 1: ret += UAPlatformFirefox(); break;
-
-                    /* TODO: Add more browsers */
-            }
+            ret += UAPlatformFirefox(); // Removed Chrome as of now due to issues with m.facebook.com and mbasic.facebook.com
 
             return ret;
         }
