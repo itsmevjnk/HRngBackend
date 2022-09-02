@@ -60,6 +60,20 @@ namespace HRngBackend
         {
             return FromTxt_String(File.ReadAllText(path));
         }
+
+        /// <summary>
+        ///  Format a string =&gt; string dictionary into a human-readable key-value pair string.
+        /// </summary>
+        /// <param name="cookies">The string =&gt; string dictionary to be formatted.</param>
+        /// <param name="kvsep">The key-value separator character (optional). Defaults to <c>=</c> (equal).</param>
+        /// <param name="psep">The pair separator character (optional). Defaults to <c>;</c> (semicolon).</param>
+        /// <returns>A human-readable key-value pair string equivalent of the input dictionary.</returns>
+        public static string ToKVPString(IDictionary<string, string> cookies, char kvsep = '=', char psep = ';')
+        {
+            string ret = "";
+            foreach (var item in cookies) ret += $"{item.Key}{kvsep}{item.Value}{psep}";
+            return ret;
+        }
     }
 }
 #nullable disable
