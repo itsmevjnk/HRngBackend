@@ -258,7 +258,6 @@ namespace HRngBackend
             link = $"https://www.facebook.com/{handle}";
             (string url, Dictionary<string, string> data, string xpath)[] services =
             {
-                ("https://id.atpsoftware.vn/", new Dictionary<string, string>{ { "linkCheckUid", link } }, "//div[@id='menu1']/textarea"),
                 ("https://findidfb.com/#", new Dictionary<string, string>{ { "url", link } }, "//div[@class='alert alert-success alert-dismissable']/b"),
                 ("https://lookup-id.com/#", new Dictionary<string, string>{ { "fburl", link }, { "check", "Lookup" } }, "//span[@id='code']")
                 /* TODO: Add more services. The more services we have in here, the more chance we have at getting UIDs without ratelimiting the user. */
